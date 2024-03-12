@@ -2,7 +2,7 @@
 SELECT nombre,precio,'€' AS DIVISA FROM producto;
 
 -- 2 Nombre y precio de productos con precio menor de 120€ en formato descendente, mostrando la moneda.
-SELECT nombre, precio,'€' AS DIVISA FROM producto WHERE precio < 120 ORDER BY precio DESC;
+SELECT nombre,precio,'€' AS DIVISA FROM producto WHERE precio < 120 ORDER BY precio DESC;
 
 -- 3a Nombre y precio de productos con precio mayor o igual a 180€ de forma Ascendente, mostrando la moneda.
 SELECT nombre, precio,'€' AS DIVISA FROM producto WHERE precio >= 180 ORDER BY precio ASC;
@@ -81,12 +81,12 @@ SELECT COUNT(nombre) AS NUMERO_FABRICANTES FROM fabricante;
 SELECT COUNT(nombre) AS NUMERO_FABRICANTES FROM fabricante WHERE nombre LIKE '%E%';
 
 -- 22 Muestra los códigos de fabricante distintos que aparecen en la tabla productos. No se pueden repetir.
-SELECT DISTINCT(codigo_fabricante) FROM producto;
+SELECT DISTINCT(codFabricante) FROM producto;
 
 -- 23 Calcula la media del precio de los productos mostrando el valor de €. Utiliza la función concat().
 SELECT CONCAT(AVG(precio),'€') AS MEDIA FROM producto;
 -- o
-SELECT CONCAT(ROUND(AVG(precio), 2), '€') AS MEDIA FROM producto;
+SELECT CONCAT(ROUND(AVG(precio), 2), '€') AS MEDIA FROM producto; -- Para redondear a 2 el numero de decimales 
 
 -- 24 Calcula el precio medio de los productos en el valor monetario de Dólares mostrando su símbolo $.
 SELECT CONCAT(ROUND(AVG(precio*@dolar),2),'$') AS MEDIA_EN_DOLARES FROM producto;
@@ -94,14 +94,24 @@ SELECT CONCAT(ROUND(AVG(precio*@dolar),2),'$') AS MEDIA_EN_DOLARES FROM producto
 -- Parte III: Consultas complejas.
 
 -- 25 Cuenta el número de productos que tiene cada fabricante, mostrando el nombre del fabricante.
-
-
+SELECT COUNT(codProducto) AS numeroProductos, F.nombre
+FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante
+GROUP BY F.codFabricante ORDER BY numeroProductos DESC;
 
 -- 26 Muestra el nombre, precio y fabricante de todos los productos, ordenado por el nombre en forma ascendente. Hazlo de dos formas diferentes.
+SELECT P.nombre AS nombreProducto, precio, F.nombre AS nombreFabricante
+FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante
+ORDER BY F.nombre ASC;
+
+SELECT P.nombre AS nombreProducto, precio, F.nombre AS nombreFabricante
+FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante
+ORDER BY P.nombre ASC;
+
 
 
 -- 27 Calcula el precio medio de los productos de cada fabricante, mostrando el nombre de cada fabricante y su símbolo en €. Hazlo de dos formas diferentes
-
+SELECT ROUND(CONCAT(AVG(precio),'€'),2)AS precioMedio, F.nombre AS nombreFabricante
+FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY F.codFabricante;
 
 -- 28 Selecciona los nombres de los fabricantes cuya media del precio de productos supera los 150€. Mostrar el nombre fabricante y su media,
 -- ordenado por su media de forma descendente. Hazlo de dos formas diferentes.
