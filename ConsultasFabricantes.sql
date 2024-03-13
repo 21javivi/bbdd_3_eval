@@ -115,42 +115,66 @@ FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY F.c
 
 -- 28 Selecciona los nombres de los fabricantes cuya media del precio de productos supera los 150€. Mostrar el nombre fabricante y su media,
 -- ordenado por su media de forma descendente. Hazlo de dos formas diferentes.
-
+SELECT ROUND(CONCAT(AVG(precio),'€'),2)AS precioMedio, F.nombre AS nombreFabricante
+FROM producto P, fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY F.codFabricante HAVING precioMedio>150 ORDER BY precioMedio DESC;
 
 -- 29 Obtén el producto más barato de todos los productos. Muestra el nombre del producto, precio en euros y el nombre del fabricante.
-
+SELECT MIN(precio) FROM producto P; -- Paso 1
+SELECT nombre FROM producto P WHERE precio=(SELECT MIN(precio) FROM producto P); -- Paso 2
+SELECT P.nombre AS nombreProducto, F.nombre AS nombreFabricante,(SELECT MIN(precio) FROM producto P) AS precioMinimo FROM producto P, fabricante F 
+WHERE P.codFabricante= F.codFabricante AND precio=(SELECT MIN(precio) FROM producto P);-- Paso FINAL
 
 -- 30 Obtén el producto más caro y más barato, mostrando el nombre, el precio en Euros y el nombre del fabricante.
+SELECT MIN(precio) FROM producto P; -- Paso 1
+SELECT nombre FROM producto P WHERE precio=(SELECT MIN(precio) FROM producto P); -- Paso 2
+SELECT P.nombre AS nombreProducto, F.nombre AS nombreFabricante,(SELECT MIN(precio) FROM producto P) AS precio FROM producto P, fabricante F 
+WHERE P.codFabricante= F.codFabricante AND precio=(SELECT MIN(precio) FROM producto P);-- Paso 3
+-- ↑↑↑↑ MINIMO ↑↑↑↑
 
+SELECT MAX(precio) FROM producto P; -- Paso 4
+SELECT nombre FROM producto P WHERE precio=(SELECT MAX(precio) FROM producto P); -- Paso 5
+SELECT P.nombre AS nombreProducto, F.nombre AS nombreFabricante,(SELECT MAX(precio) FROM producto P) AS precio FROM producto P, fabricante F 
+WHERE P.codFabricante= F.codFabricante AND precio=(SELECT MAX(precio) FROM producto P);-- Paso 6
+-- ↑↑↑↑ MAXIMO ↑↑↑↑
+
+SELECT P.nombre AS nombreProducto, F.nombre AS nombreFabricante,(SELECT MIN(precio) FROM producto P) AS precio FROM producto P, fabricante F 
+WHERE P.codFabricante= F.codFabricante AND precio=(SELECT MIN(precio) FROM producto P)
+UNION
+SELECT P.nombre AS nombreProducto, F.nombre AS nombreFabricante,(SELECT MAX(precio) FROM producto P) AS precio FROM producto P, fabricante F 
+WHERE P.codFabricante= F.codFabricante AND precio=(SELECT MAX(precio) FROM producto P);-- Paso FINAL
+-- ↑↑↑↑ UNION MINIMO Y MAXIMO ↑↑↑↑
 
 -- 31 Obtén el nombre de cada fabricante con el nombre y precio de su producto más caro.
-
--- Para poder comprobarlo deberás añadir los siguientes productos:
-
--- ddr2 memory, 50€, Winchester
-
+-- Debes añadir los siguientes productos:
+-- DDR2 memory, 50€, Winchester
 -- Bluetooth Speakers, 230€, bose
-
 -- Multimedia Speakers, 140€, bose
-
 -- Multimedia White Speakers, 80€, bose
 
+INSERT INTO producto(nombre, precio, codFabricante) VALUES("DDR2",50,(SELECT codFabricante FROM fabricante WHERE nombre="Winchester")),("Bluetooth Speakers", 230, (SELECT codFabricante FROM fabricante WHERE nombre="Bose")),
+("Multimedia Speakers",140,(SELECT codFabricante FROM fabricante WHERE nombre="Bose")),("Multimedia White Speakers",80,(SELECT codFabricante FROM fabricante WHERE nombre="Bose"));
+
+SELECT F.nombre, MAX(precio) AS precio, P.nombre FROM producto P,fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY P.codFabricante; -- A PESAR DEL ERROR, LA CONSULTA ES CORRECTA
+-- NOS DA EL ERROR 1055, POR LO QUE PARA SOLUCIONARLO DEBEREMOS EJECUTAR LO SIGUIENTE:
+SELECT @@sql_mode;
+SET @@sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+-- UNA VEZ EJECUTADO, SI VOLVEMOS A EJECUTAR LA CONSULTA NO NOS DARA ERROR
+
 -- b) Idem con el Producto más barato.
+SELECT F.nombre, MIN(precio) AS precio, P.nombre FROM producto P,fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY P.codFabricante;
 
 -- c) Idem con el Producto más caro y barato.
-
-
-
-
-
-
-
-
+SELECT F.nombre AS nombreFabricante, MAX(precio) AS precio, P.nombre FROM producto P,fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY P.codFabricante
+UNION
+SELECT F.nombre AS nombreFabricante, MIN(precio) AS precio, P.nombre FROM producto P,fabricante F WHERE F.codFabricante=P.codFabricante GROUP BY P.codFabricante 
+ORDER BY nombreFabricante, precio;
 
 -- 32 Computa el precio medio de todos los productos cuyo fabricante sea 'Creative Labs'.
-
+SELECT ROUND(AVG(precio),2) AS precioMedio FROM producto P, fabricante F WHERE P.codFabricante = F.codFabricante GROUP BY F.nombre HAVING F.nombre="Creative Labs";
 
 -- 33 Selecciona el nombre de cada fabricante cuya media de productos sea superior a 140€ y al menos contenga 2 o más productos diferentes.
+SELECT AVG(precio) AS precioMedio, F.nombre FROM producto P, fabricante F WHERE P.codFabricante=F.codFabricante GROUP BY F.nombre HAVING precioMedio>140 ORDER BY precioMedio DESC; -- Paso 1
+SELECT COUNT(precio) AS numeroProductos, F.nombre FROM producto P, fabricante F WHERE P.codFabricante=F.codFabricante GROUP BY F.nombre HAVING numeroProductos>1 ORDER BY numeroProductos DESC; -- Paso 2
 
 
 -- 34 Por campaña de ABRIL, actualiza los precios aplicando un descuento del 10%. Además, los precios que superen los 200 € se les añadirá un 5%
