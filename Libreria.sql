@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS libreria;
 CREATE SCHEMA IF  NOT EXISTS libreria;
-use libreria;
+USE libreria;
 
 CREATE TABLE IF NOT EXISTS autor(
   aut_id varchar(6) NOT NULL,
@@ -36,3 +36,11 @@ CREATE TABLE IF NOT EXISTS libro(
   CONSTRAINT fk_autor FOREIGN KEY(aut_id) REFERENCES autor(aut_id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_publicacion FOREIGN KEY(pub_id) REFERENCES publicacion(pub_id)  ON UPDATE CASCADE
 )Engine= InnoDB DEFAULT CHARSET =utf8mb4;
+
+CREATE TABLE IF NOT EXISTS categoria(
+	cate_id VARCHAR(5) NOT NULL,
+    nombre VARCHAR(20) NOT NULL,
+    PRIMARY KEY(cate_id)
+);
+
+ALTER TABLE libro ADD CONSTRAINT fk_categoria FOREIGN KEY(cate_id) REFERENCES categoria(cate_id) ON DELETE NO ACTION ON UPDATE CASCADE;
