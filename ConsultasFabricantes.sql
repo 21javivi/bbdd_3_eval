@@ -173,8 +173,21 @@ ORDER BY nombreFabricante, precio;
 SELECT ROUND(AVG(precio),2) AS precioMedio FROM producto P, fabricante F WHERE P.codFabricante = F.codFabricante GROUP BY F.nombre HAVING F.nombre="Creative Labs";
 
 -- 33 Selecciona el nombre de cada fabricante cuya media de productos sea superior a 140€ y al menos contenga 2 o más productos diferentes.
-SELECT AVG(precio) AS precioMedio, F.nombre FROM producto P, fabricante F WHERE P.codFabricante=F.codFabricante GROUP BY F.nombre HAVING precioMedio>140 ORDER BY precioMedio DESC; -- Paso 1
+SELECT ROUND(AVG(precio)) AS precioMedio, F.nombre FROM producto P, fabricante F WHERE P.codFabricante=F.codFabricante GROUP BY F.nombre HAVING precioMedio>140 ORDER BY precioMedio DESC; -- Paso 1
 SELECT COUNT(precio) AS numeroProductos, F.nombre FROM producto P, fabricante F WHERE P.codFabricante=F.codFabricante GROUP BY F.nombre HAVING numeroProductos>1 ORDER BY numeroProductos DESC; -- Paso 2
 
 
+SELECT COUNT(precio) AS numeroProductos, AVG(precio) AS precioMedio, F.nombre FROM producto P, fabricante F WHERE  F.codFabricante=P.codFabricante GROUP BY F.nombre HAVING precioMedio>140 AND numeroProductos>1;
+
 -- 34 Por campaña de ABRIL, actualiza los precios aplicando un descuento del 10%. Además, los precios que superen los 200 € se les añadirá un 5%
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE producto SET precio=precio * 0.90 WHERE precio<201;
+UPDATE producto SET precio=precio*0.85 WHERE precio>200;
+SET SQL_SAFE_UPDATES = 1;
+
+-- EJEMPLO VISTAS:
+CREATE VIEW vista01 AS
+SELECT COUNT(precio) AS numeroProductos, AVG(precio) AS precioMedio, F.nombre FROM producto P, fabricante F WHERE  F.codFabricante=P.codFabricante GROUP BY F.nombre HAVING precioMedio>140 AND numeroProductos>1;
+
+SELECT * FROM vista01;
