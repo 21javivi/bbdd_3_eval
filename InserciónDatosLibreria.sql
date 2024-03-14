@@ -1,3 +1,5 @@
+START TRANSACTION;
+
 INSERT INTO autor VALUES ('AUT001','William Norton','UK','Cambridge'),
 ('AUT002','William Maugham','Canada','Toronto'),
 ('AUT003','William Anthony','UK',''),
@@ -14,6 +16,8 @@ INSERT INTO autor VALUES ('AUT001','William Norton','UK','Cambridge'),
 ('AUT014','C. J. Wilde','UK','London'),
 ('AUT015','Butler Andre','USA','Florida');
 
+SAVEPOINT autor;
+
 INSERT INTO publicacion VALUES ('P001','Jex Max Publication','New York','USA','New York',15,'1969-12-25'),
 ('P002','BPP Publication','Mumbai','India','New Delhi',10,'1985-10-01'),
 ('P003','New Harrold Publication','Adelaide','Australia','Sydney',6,'1975-09-05'),
@@ -22,6 +26,8 @@ INSERT INTO publicacion VALUES ('P001','Jex Max Publication','New York','USA','N
 ('P006','Summer Night Publication','New York','USA','Atlanta',10,'1990-12-10'),
 ('P007','Pieterson Grp. of Publishers','Cambridge','UK','London',6,'1950-07-15'),
 ('P008','Novel Publisher Ltd.','New Delhi','India','Bangalore',10,'2000-01-01');
+
+SAVEPOINT publicacion;
 
 /*Se pueden poner las fechas con comillas simples o dobles */
 /* Los campo NULL deben de ir sin comillas*/
@@ -42,6 +48,7 @@ INSERT IGNORE INTO libro VALUES ('BK014','Concepts in Health',979014,'CA005','AU
 INSERT IGNORE INTO libro VALUES ('BK015','Anatomy & Physiology ',979015,'CA005','AUT014','p008','2000-10-10','Hindi',135,135.00);
 INSERT IGNORE INTO libro VALUES ('BK016','Networks and Telecommunications',979016,'CA003','AUT015','p003','2002-01-01','French',95,45.00);
 
+SAVEPOINT libroFechaComillasDobles;
 
 
 
@@ -63,6 +70,7 @@ INSERT INTO libro VALUES ('BK001','Introduction to Electrodynamics',979001,'CA00
 ('BK015','Anatomy & Physiology ',979015,'CA005','AUT014','p008',2000-10-10,'Hindi',135,135.00),
 ('BK016','Networks and Telecommunications',979016,'CA003','AUT015','p003',2002-01-01,'French',95,45.00);
 
+SAVEPOINT fechaLibroSinComillas;
 
 /* Campo fecha con comillas, apto para ORCALE. Actúa como un String*/
 INSERT INTO libro VALUES ('BK001','Introduction to Electrodynamics',979001,'CA001','AUT001','p003','2001-05-08','English',201,85.00),
@@ -82,5 +90,7 @@ INSERT INTO libro VALUES ('BK001','Introduction to Electrodynamics',979001,'CA00
 ('BK015','Anatomy & Physiology ',979015,'CA005','AUT014','p008','2000-10-10','Hindi',135,135.00),
 ('BK016','Networks and Telecommunications',979016,'CA003','AUT015','p003','2002-01-01','French',95,45.00);
 
+SAVEPOINT fechaLibroComillas;
 
 
+COMMIT;
