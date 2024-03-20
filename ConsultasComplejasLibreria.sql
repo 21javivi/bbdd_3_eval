@@ -24,3 +24,17 @@ SELECT pub_name, COUNT(*) AS nPulicaciones
 FROM libro L NATURAL JOIN publicacion P
 WHERE country='USA'
 GROUP BY pub_name;
+
+-- 24
+SELECT pub_name, COUNT(*) AS nPulicaciones
+FROM libro L, publicacion P 
+WHERE L.pub_id=P.pub_id AND 
+country='USA'
+GROUP BY pub_name
+UNION
+SELECT '',''
+UNION
+SELECT 'Total Publicaciones', COUNT(*) AS nPublicaciones
+FROM libro L, publicacion P 
+WHERE L.pub_id=P.pub_id AND 
+country='USA';
