@@ -12,7 +12,7 @@ WHERE book_price=(SELECT MAX(book_price) AS precioMayor FROM libro);
 
 -- 22
 SELECT COUNT(book_id) AS nLibros, pub_name
-FROM libro L, publicacion P -- FROM libro NATURAL JOIN publicacion
+FROM libro L, publicacion P -- FROM libro L NATURAL JOIN publicacion P
 WHERE L.pub_id=P.pub_id 
 GROUP BY pub_name;
 
