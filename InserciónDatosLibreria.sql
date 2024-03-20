@@ -29,6 +29,10 @@ INSERT INTO publicacion VALUES ('P001','Jex Max Publication','New York','USA','N
 
 SAVEPOINT publicacion;
 
+INSERT INTO categoria VALUES ('CA001','Fisica'),('CA002','Termodinamica'),('CA003','Computer'),('CA004','Ciencias Naturales'),('CA005','Medicina'),('CA008','Anatomia'),('CA009','Psicologia');
+
+SAVEPOINT categoria;
+
 /*Se pueden poner las fechas con comillas simples o dobles */
 /* Los campo NULL deben de ir sin comillas*/
 INSERT INTO libro VALUES ('BK001','Introduction to Electrodynamics',979001,'CA001','AUT001','p003',"2001-5-8",'English',201,85.00);
